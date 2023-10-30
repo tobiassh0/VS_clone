@@ -4,6 +4,22 @@ extends CharacterBody2D
 @onready var sprite = $Sprite2D
 @onready var walkTimer = get_node("%walkTimer")
 var hp = 80.0
+# attack #
+var iceSpear = preload("res://Player/attack.tscn")
+# attack nodes # 
+@onready var iceSpearTimer = get_node("Attack/IceSpearTimer")
+@onready var iceSpearAttackTimer = get_node("Attack/IceSpearTimer/IceSpearAttackTimer")
+# Ice spear #
+var icespear_ammo = 0 
+var icespear_baseammo = 1
+var icespear_attackspeed = 1.5
+var icespear_level = 1
+
+# enemy related #
+var enemy_close = []
+
+func _ready():
+	attack()
 
 # godot defined function
 func _physics_process(_delta): # every single frame
@@ -33,7 +49,46 @@ func movement():
 	velocity = mov.normalized()*movement_speed
 	move_and_slide() # godot function	
 
-
 func _on_hurt_box_hurt(damage):
 	hp -= damage
 	print(hp)
+
+func attack():
+	if icespear_level > 0:
+		iceSpearTimer.wait_time = icespear_attackspeed
+		if iceSpearTimer.is_stopped():
+			iceSpearTimer.start()
+
+func _on_ice_spear_timer_timeout():
+	# loading ammo
+	icespear_ammo += icespear_baseammo
+	iceSpearAttackTimer.start()
+
+func _on_ice_spear_attack_timer_timeout():
+	# shooting
+	if icespear_ammo > 0:
+		var icespear_attack = iceSpear.instantiate()
+		icespear_attack.position = position
+		icespear_attack.target = get_random_target()
+		icespear_attack.level = icespear_level
+		add_child(icespear_attack)
+		icespear_ammo -= 1
+		if icespear_ammo > 0: 
+			iceSpearAttackTimer.start()
+		else:
+			iceSpearAttackTimer.stop()
+
+func get_random_target():
+	if enemy_close.size() > 0:
+		return enemy_close.pick_random().global_position
+	else:
+		return Vector2.UP # shoot up if nothing on the screen
+
+func _on_enemy_detection_area_body_entered(body):
+	if not enemy_close.has(body):
+		enemy_close.append(body)
+
+
+func _on_enemy_detection_area_body_exited(body):
+	if enemy_close.has(body):
+		enemy_close.erase(body)

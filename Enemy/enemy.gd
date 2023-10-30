@@ -8,7 +8,7 @@ extends CharacterBody2D
 @export var movement_speed = 20.0
 @onready var sprite = $Sprite2D
 @onready var anim = $AnimationPlayer
-@export var hp = 20.0
+@export var hp = 5.0
 
 func _ready():
 	anim.play("walk")
