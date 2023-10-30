@@ -1,0 +1,12 @@
+[gd_scene load_steps=3 format=3 uid="uid://d1x5tgtbcuvxi"]
+
+[ext_resource type="PackedScene" uid="uid://b0fy1nadk3ait" path="res://Enemy/enemy.tscn" id="1_1tp80"]
+[ext_resource type="Texture2D" uid="uid://15ebqi7kejun" path="res://Textures/Enemy/kolbold_strong.png" id="2_thb8x"]
+
+[node name="enemy_kobold_strong" instance=ExtResource("1_1tp80")]
+
+[node name="Sprite2D" parent="." index="0"]
+texture = ExtResource("2_thb8x")
+
+[editable path="HurtBox"]
+[editable path="HitBox"]
