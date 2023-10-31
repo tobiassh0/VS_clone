@@ -1,0 +1,63 @@
+[gd_resource type="VisualShader" load_steps=7 format=3 uid="uid://d1qjvdsak28wj"]
+
+[ext_resource type="Texture2D" uid="uid://ywij2rnwq47s" path="res://icon.svg" id="1_21jys"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_npj88"]
+
+[sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_edp3s"]
+output_port_for_preview = 0
+source = 5
+texture = SubResource("NoiseTexture2D_npj88")
+
+[sub_resource type="VisualShaderNodeTexture2DParameter" id="VisualShaderNodeTexture2DParameter_br3eb"]
+parameter_name = "tex"
+
+[sub_resource type="VisualShaderNodeColorOp" id="VisualShaderNodeColorOp_0msqt"]
+
+[sub_resource type="VisualShaderNodeTexture" id="VisualShaderNodeTexture_qtujv"]
+source = 2
+texture = ExtResource("1_21jys")
+
+[resource]
+resource_local_to_scene = true
+code = "shader_type canvas_item;
+render_mode blend_mix;
+
+uniform sampler2D tex;
+
+
+
+void fragment() {
+	vec4 n_out5p0;
+// Texture2D:5
+	n_out5p0 = texture(TEXTURE, UV);
+
+
+	vec4 n_out2p0;
+// Texture2D:2
+	n_out2p0 = texture(tex, UV);
+
+
+// ColorOp:4
+	vec3 n_out4p0 = vec3(1.0) - (vec3(1.0) - vec3(n_out5p0.xyz)) * (vec3(1.0) - vec3(n_out2p0.xyz));
+
+
+// Output:0
+	COLOR.rgb = n_out4p0;
+
+
+}
+"
+graph_offset = Vector2(-133.809, -95.8643)
+mode = 1
+flags/light_only = false
+nodes/fragment/0/position = Vector2(660, 60)
+nodes/fragment/2/node = SubResource("VisualShaderNodeTexture_edp3s")
+nodes/fragment/2/position = Vector2(200, 100)
+nodes/fragment/3/node = SubResource("VisualShaderNodeTexture2DParameter_br3eb")
+nodes/fragment/3/position = Vector2(-140, -40)
+nodes/fragment/4/node = SubResource("VisualShaderNodeColorOp_0msqt")
+nodes/fragment/4/position = Vector2(460, 20)
+nodes/fragment/5/node = SubResource("VisualShaderNodeTexture_qtujv")
+nodes/fragment/5/position = Vector2(200, -60)
+nodes/fragment/connections = PackedInt32Array(4, 0, 0, 0, 5, 0, 4, 0, 3, 0, 2, 2, 2, 0, 4, 1)

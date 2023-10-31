@@ -17,14 +17,10 @@ enemy_spawn_delay = 1
 
 [node name="World" type="Node2D"]
 
-[node name="Background" type="Sprite2D" parent="."]
-texture_filter = 2
-texture_repeat = 2
-texture = ExtResource("1_obd2f")
-region_enabled = true
-region_rect = Rect2(0, 0, 1000, 1000)
-
 [node name="Player" parent="." instance=ExtResource("2_yio05")]
+
+[node name="enemy_kobold_weak" parent="." instance=ExtResource("3_jmfu5")]
+position = Vector2(34, -1)
 
 [node name="EnemySpawner" parent="." instance=ExtResource("3_323ts")]
 spawns = Array[ExtResource("5_wf5vi")]([SubResource("Resource_sbs3d")])
@@ -33,3 +29,14 @@ spawns = Array[ExtResource("5_wf5vi")]([SubResource("Resource_sbs3d")])
 stream = ExtResource("6_li556")
 volume_db = -30.0
 autoplay = true
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_mirroring = Vector2(32, 32)
+
+[node name="Background" type="Sprite2D" parent="ParallaxBackground/ParallaxLayer"]
+texture_repeat = 2
+texture = ExtResource("1_obd2f")
+region_enabled = true
+region_rect = Rect2(0, 0, 1760, 1300)

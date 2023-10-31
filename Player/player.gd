@@ -3,6 +3,8 @@ extends CharacterBody2D
 @export var movement_speed = 80.0
 @onready var sprite = $Sprite2D
 @onready var walkTimer = get_node("%walkTimer")
+
+var posplayer = position
 var hp = 80.0
 # attack #
 var iceSpear = preload("res://Player/attack.tscn")
@@ -25,7 +27,7 @@ func _ready():
 func _physics_process(_delta): # every single frame
 #	delta = 1/60 # of a second
 	movement()
-	
+
 func movement():
 	# detect which keys are pressed
 	var x_mov = Input.get_action_strength("right") - Input.get_action_strength("left")
@@ -73,13 +75,19 @@ func _on_ice_spear_attack_timer_timeout():
 		icespear_attack.level = icespear_level
 		add_child(icespear_attack)
 		icespear_ammo -= 1
-		if icespear_ammo > 0: 
+		if icespear_ammo > 0:
 			iceSpearAttackTimer.start()
 		else:
 			iceSpearAttackTimer.stop()
 
 func get_random_target():
-	if enemy_close.size() > 0:
+	if enemy_close.size() > 1:
+		var enemy_close_dist = []
+		for i in enemy_close: # TODO : mostly works
+			enemy_close_dist.append(sqrt(pow(posplayer.x-i.global_position.x,2) + pow(posplayer.y-i.global_position.y,2)))
+		var index = enemy_close_dist.find(enemy_close_dist.min(),0)
+		return enemy_close[index].global_position
+	elif enemy_close.size() == 1:
 		return enemy_close.pick_random().global_position
 	else:
 		return Vector2.UP # shoot up if nothing on the screen
@@ -87,7 +95,6 @@ func get_random_target():
 func _on_enemy_detection_area_body_entered(body):
 	if not enemy_close.has(body):
 		enemy_close.append(body)
-
 
 func _on_enemy_detection_area_body_exited(body):
 	if enemy_close.has(body):

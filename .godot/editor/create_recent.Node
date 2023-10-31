@@ -1,3 +1,8 @@
+ColorRect
+ParallaxLayer
+CanvasModulate
+TileMap
+ParallaxBackground
 AudioStreamPlayer
 CollisionShape2D
 Area2D
