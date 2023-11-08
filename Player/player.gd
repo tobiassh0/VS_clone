@@ -1,7 +1,7 @@
 extends CharacterBody2D
 
 @export var movement_speed = 80.0
-@onready var sprite = $Sprite2D
+@onready var sprite = $AnimatedSprite2D
 @onready var walkTimer = get_node("%walkTimer")
 
 var posplayer = position
@@ -26,7 +26,17 @@ func _ready():
 # godot defined function
 func _physics_process(_delta): # every single frame
 #	delta = 1/60 # of a second
+	animatesprite()
 	movement()
+
+func animatesprite():
+	var x_mov = Input.get_action_strength("right") - Input.get_action_strength("left")
+	var y_mov = Input.get_action_strength("down") - Input.get_action_strength("up")
+	var mov = Vector2(x_mov,y_mov)
+	if mov != Vector2.ZERO: # check if moving
+		sprite.play("run")
+	else:
+		sprite.play("idle")
 
 func movement():
 	# detect which keys are pressed
@@ -40,18 +50,11 @@ func movement():
 		sprite.flip_h = true
 	elif mov.x < 0: # facing left
 		sprite.flip_h = false
-	if mov != Vector2.ZERO:
-		if walkTimer.is_stopped():
-			if sprite.frame >= sprite.hframes - 1:
-				sprite.frame=0
-			else:
-				sprite.frame+=1
-			walkTimer.start()
-	# determine velocity by normalised movement (in time)	
+	# determine velocity by normalised movement (in time)
 	velocity = mov.normalized()*movement_speed
 	move_and_slide() # godot function	
 
-func _on_hurt_box_hurt(damage):
+func _on_hurt_box_hurt(damage,_angle,_knockback):
 	hp -= damage
 	print(hp)
 
@@ -84,7 +87,7 @@ func get_random_target():
 	if enemy_close.size() > 1:
 		var enemy_close_dist = []
 		for i in enemy_close: # TODO : mostly works
-			enemy_close_dist.append(sqrt(pow(posplayer.x-i.global_position.x,2) + pow(posplayer.y-i.global_position.y,2)))
+			enemy_close_dist.append(sqrt(pow(posplayer.x-i.position.x,2) + pow(posplayer.y-i.position.y,2)))
 		var index = enemy_close_dist.find(enemy_close_dist.min(),0)
 		return enemy_close[index].global_position
 	elif enemy_close.size() == 1:

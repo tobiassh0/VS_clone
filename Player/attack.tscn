@@ -9,6 +9,7 @@ size = Vector2(33.0761, 5.65599)
 
 [node name="IceSpear" type="Area2D" groups=["attack"]]
 top_level = true
+position = Vector2(-3, 0)
 scale = Vector2(0.1, 0.1)
 collision_layer = 4
 collision_mask = 4
@@ -16,13 +17,10 @@ script = ExtResource("1_nhiwh")
 metadata/_edit_group_ = true
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-rotation = 3.14159
 texture = ExtResource("1_taxom")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, 4.76837e-07)
 rotation = 0.785398
-scale = Vector2(1, 1)
 shape = SubResource("RectangleShape2D_nnbtb")
 
 [node name="Timer" type="Timer" parent="."]
@@ -35,5 +33,9 @@ stream = ExtResource("3_tfos5")
 volume_db = -10.0
 pitch_scale = 2.0
 autoplay = true
+
+[node name="animTimer" type="Timer" parent="."]
+unique_name_in_owner = true
+one_shot = true
 
 [connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
